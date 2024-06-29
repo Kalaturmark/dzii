@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Четыре блока</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #container {
+            display: flex;
+            height: 100%;
+        }
+        #left {
+            background-color: lightblue;
+            width: 20%;
+            transition: width 0.3s;
+            position: relative;
+        }
+        #left.collapsed {
+            width: 0;
+        }
+        #toggle {
+            position: absolute;
+            top: 50%;
+            right: -15px;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background-color: grey;
+            cursor: pointer;
+        }
+        #right {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        #top {
+            background-color: lightgreen;
+            height: 50%;
+            min-height: 100px;
+            position: relative;
+        }
+        #bottom {
+            background-color: lightcoral;
+            height: 50%;
+            min-height: 100px;
+        }
+        #divider {
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background-color: grey;
+            cursor: ns-resize;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="left">
+        <div id="toggle">&lt;</div>
+    </div>
+    <div id="right">
+        <div id="top">
+            <div id="divider"></div>
+        </div>
+        <div id="bottom"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        // Функционал скрытия/показа левого блока
+        $('#toggle').click(function() {
+            $('#left').toggleClass('collapsed');
+            if ($('#left').hasClass('collapsed')) {
+                $('#toggle').html('&gt;');
+            } else {
+                $('#toggle').html('&lt;');
+            }
+        });
+
+        // Функционал изменения высоты блоков
+        let isDragging = false;
+        $('#divider').mousedown(function(e) {
+            e.preventDefault();
+            isDragging = true;
+            $(document).mousemove(function(e) {
+                if (isDragging) {
+                    let containerOffset = $('#container').offset().top;
+                    let newHeight = e.pageY - containerOffset;
+                    let containerHeight = $('#container').height();
+                    if (newHeight >= 100 && (containerHeight - newHeight) >= 100) {
+                        $('#top').height(newHeight);
+                        $('#bottom').height(containerHeight - newHeight);
+                    }
+                }
+            });
+        });
+
+        $(document).mouseup(function() {
+            isDragging = false;
+            $(document).unbind('mousemove');
+        });
+    });
+</script>
+</body>
+</html>
