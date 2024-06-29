@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Генератор случайных строк</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        form {
+            display: inline-block;
+            text-align: left;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 5px;
+            margin-top: 10px;
+        }
+
+        input[type="number"] {
+            width: 50px;
+        }
+
+        button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>Генератор случайных строк</h1>
+<form id="string-generator-form">
+    <label>
+        Длина строки:
+        <input type="number" id="string-length" min="1" value="10" required>
+    </label>
+    <br>
+    <label>
+        <input type="checkbox" id="include-digits"> Цифры
+    </label>
+    <br>
+    <label>
+        <input type="checkbox" id="include-upper"> Латинские буквы в верхнем регистре
+    </label>
+    <br>
+    <label>
+        <input type="checkbox" id="include-lower"> Латинские буквы в нижнем регистре
+    </label>
+    <br>
+    <button type="button" id="generate-button">Generate</button>
+</form>
+<input type="text" id="generated-string" readonly>
+
+<script>
+    $(document).ready(function() {
+        function generateRandomString(length, includeDigits, includeUpper, includeLower) {
+            const digits = '0123456789';
+            const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const lowerCase = 'abcdefghijklmnopqrstuvwxyz';
+            let characters = '';
+            let result = '';
+
+            if (includeDigits) characters += digits;
+            if (includeUpper) characters += upperCase;
+            if (includeLower) characters += lowerCase;
+
+            if (characters.length === 0) {
+                alert('Выберите хотя бы один тип символов.');
+                return '';
+            }
+
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+
+            return result;
+        }
+
+        $('#generate-button').click(function() {
+            const length = parseInt($('#string-length').val());
+            const includeDigits = $('#include-digits').is(':checked');
+            const includeUpper = $('#include-upper').is(':checked');
+            const includeLower = $('#include-lower').is(':checked');
+
+            const randomString = generateRandomString(length, includeDigits, includeUpper, includeLower);
+            $('#generated-string').val(randomString);
+        });
+    });
+</script>
+</body>
+</html>
